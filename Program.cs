@@ -105,3 +105,24 @@ int SumScores(List<int> scores)
     }
     return sum;
 }
+//13. Самостоятельное задание
+//Вариант 1. Универсальный ввод в диапазоне
+int ReadIntInRange(string prompt, int min, int max)
+{
+    if (min > max)
+    {
+        throw new ArgumentException("min не может быть больше max");
+    }
+
+    while (true)
+    {
+        Console.Write(prompt);
+        string input = Console.ReadLine() ?? "";
+        int number;
+        if (int.TryParse(input, out number) && number >= min && number <= max)
+        {
+            return number;
+        }
+        Console.WriteLine($"Введите число от {min} до {max}");
+    }
+}
