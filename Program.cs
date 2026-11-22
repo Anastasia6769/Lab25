@@ -1,1 +1,107 @@
-﻿Console.WriteLine("Hello, World!");
+﻿using System.Collections.Generic;
+
+int count = ReadCount();
+List<int> scores = new List<int>();
+int errors = 0;
+
+while (scores.Count < count)
+{
+    try
+    {
+        Console.Write($"Результат {scores.Count + 1}: ");
+        int score = int.Parse(Console.ReadLine() ?? "");
+        AddScore(scores, score);
+        Console.WriteLine("Результат сохранён");
+    }
+    catch (FormatException)
+    {
+        errors++;
+        Console.WriteLine("Ошибка: введите целое число");
+    }
+    catch (OverflowException)
+    {
+        errors++;
+        Console.WriteLine("Ошибка: число вне диапазона int");
+    }
+    catch (ArgumentOutOfRangeException)
+    {
+        errors++;
+        Console.WriteLine("Ошибка: результат должен быть от 0 до 100");
+    }
+    finally
+    {
+        Console.WriteLine("Попытка ввода завершена");
+    }
+}
+
+Console.WriteLine();
+Console.WriteLine(">>> Итоги ввода <<<");
+Console.WriteLine();
+Console.WriteLine($"Сохранено результатов: {scores.Count}");
+Console.WriteLine($"Ошибок ввода результатов: {errors}");
+Console.WriteLine("Результаты: ");
+
+if (scores.Count == 0)
+{
+    Console.WriteLine("Список пуст");
+}
+else
+{
+    for (int i = 0; i < scores.Count; i++)
+    {
+        Console.WriteLine($"{i}: {scores[i]}");
+    }
+}
+
+int sum = SumScores(scores);
+Console.WriteLine($"Сумма: {sum}");
+
+if (scores.Count == 0)
+{
+    Console.WriteLine("Среднее не вычисляется: список пуст");
+}
+else
+{
+    double average = (double)sum / scores.Count;
+    Console.WriteLine($"Среднее: {average}"); 
+}
+
+//5. Собственная проверка и throw
+void AddScore(List<int> scores, int score)
+{
+    if (score < 0 || score > 100)
+    {
+        throw new ArgumentOutOfRangeException(
+        nameof(score), "Результат должен быть от 0 до 100");
+    }
+    scores.Add(score);
+}
+
+
+
+//Ввод количества результатов
+int ReadCount()
+{
+    while (true)
+    {
+        Console.Write("Сколько результатов сохранить (0-10): ");
+        string input = Console.ReadLine() ?? "";
+
+        if (int.TryParse(input, out int count) && count >= 0 && count <= 10)
+        {
+            return count;
+        }
+        Console.WriteLine("Введите целое число от 0 до 10");
+    }
+}
+
+//8. Основная часть — «Надёжный ввод результатов»
+int SumScores(List<int> scores)
+{
+    int sum = 0;
+    foreach (int i in scores)
+    {
+        sum += i;
+    }
+    return sum;
+}
